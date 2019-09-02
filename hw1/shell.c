@@ -22,6 +22,7 @@
 
 int cmd_help(tok_t arg[]);
 int cmd_quit(tok_t arg[]);
+int cmd_cd(tok_t arg[]);
 
 /** 
  *  Built-In Command Lookup Table Structures 
@@ -36,8 +37,22 @@ typedef struct fun_desc {
 fun_desc_t cmd_table[] = {
     {cmd_help, "help", "show this help menu"},
     {cmd_quit, "quit", "quit the command shell"},
-};
+	{cmd_cd, "cd", "change working directory"},
 
+};
+// Adding the change directory folder
+int cmd_cd(tok_t arg[]){
+	char cwd[256];
+	getcwd(cwd, sizeof(cwd))
+	char *directory = NULL;
+	if( arg[0] == NULL ){
+			directory = getenv( "HOME" );
+	}else{
+		
+	}
+
+
+}
 /**
  *  Determine whether cmd is a built-in shell command
  *
@@ -61,7 +76,12 @@ int cmd_help(tok_t arg[]) {
     }
     return 1;
 }
-
+/*
+int cmd_pwd(tok_t arg[]){
+	
+	return -1;
+}
+*/
 /**
  *  Quit the terminal
  *
@@ -142,9 +162,11 @@ int shell (int argc, char *argv[]) {
     // perform some initialisation
     init_shell();
 
+	char cwd[256];
+
     fprintf(stdout, "%s running as PID %d under %d\n",argv[0],pid,ppid);
     /** TODO: replace "TODO" with the current working directory */
-    fprintf(stdout, CYELLOW "\n%d %s# " CNORMAL, lineNum, "TODO");
+    fprintf(stdout, CYELLOW "\n%d %s# " CNORMAL, lineNum, getcwd(cwd, sizeof(cwd)) );
     
     // Read input from user, tokenize it, and perform commands
     while ( ( s = freadln(stdin) ) ) { 
@@ -155,12 +177,12 @@ int shell (int argc, char *argv[]) {
             cmd_table[fundex].fun(&t[1]); // execute built-in command
         } else {
             /** TODO: replace this statement to call a function that runs executables */
-            fprintf(stdout, "This shell only supports built-in functions. Replace this to run programs as commands.\n");
+            fprintf(stdout, getcwd(cwd, sizeof(cwd)),"\n");
         }
 
         lineNum++;
         /** TODO: replace "TODO" with the current working directory */
-        fprintf(stdout, CYELLOW "\n%d %s# " CNORMAL, lineNum, "TODO");
+        fprintf(stdout, CYELLOW "\n%d %s# " CNORMAL, lineNum, getcwd(cwd, sizeof(cwd)));
     }
     return 0;
 }
